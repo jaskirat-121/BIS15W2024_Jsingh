@@ -1,0 +1,39 @@
+---
+title: "R markdown practice"
+author: "jaskirat singh"
+date: "2024-01-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Title
+### Title
+#### Title
+
+[BIS 15L Webpage](https://jmledford3115.github.io/datascibiol/)
+
+## Question 1
+```{r}
+2 + 2
+3 * 5
+6 / 2
+8 - 9
+```
+
+## Question 2
+**This sentence is in bold**.  
+_This sentence is in italics_  
+
+## Question 3
+```{r}
+#install.packages("tidyverse")
+library("tidyverse")
+```
+
+```{r}
+ggplot(mtcars, aes(x = factor(cyl))) +
+    geom_bar()
+```
+
