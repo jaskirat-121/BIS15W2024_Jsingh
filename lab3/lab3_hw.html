@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Please Add Your Name Here" />
+<meta name="author" content="Jaskirat Singh" />
 
-<meta name="date" content="2024-01-18" />
+<meta name="date" content="2024-01-20" />
 
 <title>Lab 3 Homework</title>
 
@@ -323,17 +323,23 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+content: "";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "\e258";
-font-family: 'Glyphicons Halflings';
+content: "";
 border: none;
+}
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "";
+font-family: 'Glyphicons Halflings';
+display: inline-block;
+padding: 10px;
+border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -375,8 +381,8 @@ display: none;
 
 
 <h1 class="title toc-ignore">Lab 3 Homework</h1>
-<h4 class="author">Please Add Your Name Here</h4>
-<h4 class="date">2024-01-18</h4>
+<h4 class="author">Jaskirat Singh</h4>
+<h4 class="date">2024-01-20</h4>
 
 </div>
 
@@ -405,26 +411,81 @@ the data is <code>msleep</code>.</li>
 </ol>
 <pre class="r"><code>msleep &lt;- msleep</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li><p>Store these data into a new data frame
-<code>sleep</code>.</p></li>
-<li><p>What are the dimensions of this data frame (variables and
+<li>Store these data into a new data frame <code>sleep</code>.</li>
+</ol>
+<pre class="r"><code>sleep &lt;- data.frame(msleep)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>What are the dimensions of this data frame (variables and
 observations)? How do you know? Please show the <em>code</em> that you
-used to determine this below.</p></li>
-<li><p>Are there any NAs in the data? How did you determine this? Please
-show your code.</p></li>
-<li><p>Show a list of the column names is this data frame.</p></li>
-<li><p>How many herbivores are represented in the data?</p></li>
-<li><p>We are interested in two groups; small and large mammals. Let’s
+used to determine this below.</li>
+</ol>
+<pre class="r"><code>dim(sleep)</code></pre>
+<pre><code>## [1] 83 11</code></pre>
+<p>The dimensions of this data frame are 83 rows(observations) by 11
+columns(variables).</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Are there any NAs in the data? How did you determine this? Please
+show your code.</li>
+</ol>
+<pre class="r"><code>anyNA(sleep)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>There are NAs in the data. Running the above command gives a result
+of TRUE meaning NA are present in the sleep data frame.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Show a list of the column names is this data frame.</li>
+</ol>
+<pre class="r"><code>colnames(sleep)</code></pre>
+<pre><code>##  [1] &quot;name&quot;         &quot;genus&quot;        &quot;vore&quot;         &quot;order&quot;        &quot;conservation&quot;
+##  [6] &quot;sleep_total&quot;  &quot;sleep_rem&quot;    &quot;sleep_cycle&quot;  &quot;awake&quot;        &quot;brainwt&quot;     
+## [11] &quot;bodywt&quot;</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>How many herbivores are represented in the data?</li>
+</ol>
+<pre class="r"><code>table(sleep$vore)</code></pre>
+<pre><code>## 
+##   carni   herbi insecti    omni 
+##      19      32       5      20</code></pre>
+<p>There are 32 herbivores represented in the data.</p>
+<ol start="7" style="list-style-type: decimal">
+<li>We are interested in two groups; small and large mammals. Let’s
 define small as less than or equal to 19kg body weight and large as
 greater than or equal to 200kg body weight. Make two new dataframes
-(large and small) based on these parameters.</p></li>
-<li><p>What is the mean weight for both the small and large
-mammals?</p></li>
-<li><p>Using a similar approach as above, do large or small animals
-sleep longer on average?</p></li>
-<li><p>Which animal is the sleepiest among the entire
-dataframe?</p></li>
+(large and small) based on these parameters.</li>
 </ol>
+<pre class="r"><code>small &lt;- filter(sleep, bodywt &lt;= 19)
+large &lt;- filter(sleep, bodywt &gt;= 200)</code></pre>
+<ol start="8" style="list-style-type: decimal">
+<li>What is the mean weight for both the small and large mammals?</li>
+</ol>
+<pre class="r"><code>large_weight &lt;- large[ ,11]
+mean(large_weight)</code></pre>
+<pre><code>## [1] 1747.071</code></pre>
+<pre class="r"><code>small_weight &lt;- small[ ,11]
+mean(small_weight)</code></pre>
+<pre><code>## [1] 1.797847</code></pre>
+<ol start="9" style="list-style-type: decimal">
+<li>Using a similar approach as above, do large or small animals sleep
+longer on average?</li>
+</ol>
+<pre class="r"><code>small_sleep &lt;- small[ ,6]
+mean(small_sleep)</code></pre>
+<pre><code>## [1] 11.78644</code></pre>
+<pre class="r"><code>large_sleep &lt;- large[ ,6]
+mean(large_sleep)</code></pre>
+<pre><code>## [1] 3.3</code></pre>
+<p>On average small animals sleep longer.</p>
+<ol start="10" style="list-style-type: decimal">
+<li>Which animal is the sleepiest among the entire dataframe?</li>
+</ol>
+<pre class="r"><code>max(sleep$sleep_total)</code></pre>
+<pre><code>## [1] 19.9</code></pre>
+<pre class="r"><code>filter(sleep, sleep_total==19.9)</code></pre>
+<pre><code>##               name  genus    vore      order conservation sleep_total sleep_rem
+## 1 Little brown bat Myotis insecti Chiroptera         &lt;NA&gt;        19.9         2
+##   sleep_cycle awake brainwt bodywt
+## 1         0.2   4.1 0.00025   0.01</code></pre>
+<p>In the entire data frame the sleepiest animal is the Little Brown
+Bat.</p>
 </div>
 </div>
 <div id="push-your-final-code-to-github" class="section level2">
