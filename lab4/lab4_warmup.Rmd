@@ -1,0 +1,48 @@
+---
+title: "lab4_warmup"
+output: html_document
+date: "2024-01-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## 1. Load libraries
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(palmerpenguins)
+```
+
+## 2. load data
+```{r}
+penguins <- penguins
+```
+
+## 3. dimesions of penguins data
+```{r}
+dim(penguins)
+```
+
+## 4. get names of varaiables columns are names of variables
+```{r}
+names(penguins)
+```
+
+## 5. Get number of penguins in each island
+```{r}
+table(penguins$island)
+```
+
+## 6. get mean of data 
+```{r}
+meanbodymass <- penguins$body_mass_g
+mean(meanbodymass, na.rm=T)
+```
+
