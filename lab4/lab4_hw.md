@@ -1,7 +1,7 @@
 ---
 title: "Lab 4 Homework"
 author: "Jaskirat Singh"
-date: "2024-01-23"
+date: "2024-01-24"
 output:
   html_document: 
     theme: spacelab
@@ -244,6 +244,24 @@ table(homerange$taxon)
 
 ```r
 taxa <- select(homerange, taxon:species)
+taxa
+```
+
+```
+## # A tibble: 569 × 7
+##    taxon         common.name             class        order family genus species
+##    <fct>         <chr>                   <chr>        <fct> <chr>  <chr> <chr>  
+##  1 lake fishes   american eel            actinoptery… angu… angui… angu… rostra…
+##  2 river fishes  blacktail redhorse      actinoptery… cypr… catos… moxo… poecil…
+##  3 river fishes  central stoneroller     actinoptery… cypr… cypri… camp… anomal…
+##  4 river fishes  rosyside dace           actinoptery… cypr… cypri… clin… fundul…
+##  5 river fishes  longnose dace           actinoptery… cypr… cypri… rhin… catara…
+##  6 river fishes  muskellunge             actinoptery… esoc… esoci… esox  masqui…
+##  7 marine fishes pollack                 actinoptery… gadi… gadid… poll… pollac…
+##  8 marine fishes saithe                  actinoptery… gadi… gadid… poll… virens 
+##  9 marine fishes lined surgeonfish       actinoptery… perc… acant… acan… lineat…
+## 10 marine fishes orangespine unicornfish actinoptery… perc… acant… naso  litura…
+## # ℹ 559 more rows
 ```
 
 **5. The variable `taxon` identifies the common name groups of the species represented in `homerange`. Make a table the shows the counts for each of these `taxon`.**  
@@ -260,6 +278,26 @@ table(homerange$taxon)
 ##            14            41            12            14
 ```
 
+```r
+taxon <- c("birds","lake fishes","lizards","mammals","marine_fishes","river_fishes","snakes","tortoises","turtles")
+counts <- c(140,9,11,238,90,14,41,12,14)
+taxon_homerange <- data.frame(taxon,counts)
+taxon_homerange
+```
+
+```
+##           taxon counts
+## 1         birds    140
+## 2   lake fishes      9
+## 3       lizards     11
+## 4       mammals    238
+## 5 marine_fishes     90
+## 6  river_fishes     14
+## 7        snakes     41
+## 8     tortoises     12
+## 9       turtles     14
+```
+
 **6. The species in `homerange` are also classified into trophic guilds. How many species are represented in each trophic guild.**  
 
 ```r
@@ -272,9 +310,18 @@ table(homerange$trophic.guild)
 ##       342       227
 ```
 
+```r
+tropic_guild <- c("carnivore","herbivore")
+counts_tropic_guild <- c(342,227)
+tropic_guild_homerange <- data.frame(tropic_guild,counts_tropic_guild)
+tropic_guild_homerange
+```
 
-# Do not do the rest  
-
+```
+##   tropic_guild counts_tropic_guild
+## 1    carnivore                 342
+## 2    herbivore                 227
+```
 
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 

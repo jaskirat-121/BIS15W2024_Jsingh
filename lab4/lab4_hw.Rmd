@@ -72,21 +72,31 @@ table(homerange$taxon)
 
 ```{r}
 taxa <- select(homerange, taxon:species)
+taxa
 ```
 
 **5. The variable `taxon` identifies the common name groups of the species represented in `homerange`. Make a table the shows the counts for each of these `taxon`.**  
 ```{r}
 table(homerange$taxon)
 ```
+```{r}
+taxon <- c("birds","lake fishes","lizards","mammals","marine_fishes","river_fishes","snakes","tortoises","turtles")
+counts <- c(140,9,11,238,90,14,41,12,14)
+taxon_homerange <- data.frame(taxon,counts)
+taxon_homerange
+
+```
 
 **6. The species in `homerange` are also classified into trophic guilds. How many species are represented in each trophic guild.**  
 ```{r}
 table(homerange$trophic.guild)
 ```
-
-
-# Do not do the rest  
-
+```{r}
+tropic_guild <- c("carnivore","herbivore")
+counts_tropic_guild <- c(342,227)
+tropic_guild_homerange <- data.frame(tropic_guild,counts_tropic_guild)
+tropic_guild_homerange
+```
 
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 ```{r}
