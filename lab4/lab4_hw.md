@@ -1,7 +1,7 @@
 ---
 title: "Lab 4 Homework"
 author: "Jaskirat Singh"
-date: "2024-01-24"
+date: "2024-01-26"
 output:
   html_document: 
     theme: spacelab
@@ -325,16 +325,83 @@ tropic_guild_homerange
 
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 
+```r
+homerange_carnivores <- filter(homerange, trophic.guild=="carnivore")
+homerange_herbivores <- filter(homerange, trophic.guild=="herbivore")
+```
 
 **8. Do herbivores or carnivores have, on average, a larger `mean.hra.m2`? Remove any NAs from the data.**  
 
+```r
+mean(homerange_carnivores$mean.hra.m2, na.rm=T)
+```
+
+```
+## [1] 13039918
+```
 
 
+```r
+mean(homerange_herbivores$mean.hra.m2, na.rm=T)
+```
+
+```
+## [1] 34137012
+```
+Yes, herbiovores on average have a larger mean homerange. 
 
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
 
+```r
+owls <- filter(homerange, order=="strigiformes")
+owls <- select(owls, "mean.mass.g","log10.mass","family","genus","species")
+min(owls$mean.mass.g)
+```
+
+```
+## [1] 61.32
+```
+
+```r
+smallest_owl <- filter(homerange, mean.mass.g==61.32)
+smallest_owl <- select(smallest_owl, "common.name", "mean.mass.g","log10.mass","family","genus","species")
+smallest_owl
+```
+
+```
+## # A tibble: 1 × 6
+##   common.name        mean.mass.g log10.mass family    genus      species   
+##   <chr>                    <dbl>      <dbl> <chr>     <chr>      <chr>     
+## 1 Eurasian pygmy owl        61.3       1.79 strigidae glaucidium passerinum
+```
+The smallest owl in the data set is Eurasian pygmy owl. It is the smallest owl in Europe. More information on the species can be found at the following [link](https://animalia.bio/eurasian-pygmy-owl?letter=e). 
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
+
+```r
+homerange %>% 
+  filter(taxon =="birds") %>%
+  select(taxon, common.name, order, family, genus, species, mean.hra.m2) %>% 
+  arrange(desc(mean.hra.m2))
+```
+
+```
+## # A tibble: 140 × 7
+##    taxon common.name            order           family genus species mean.hra.m2
+##    <fct> <chr>                  <fct>           <chr>  <chr> <chr>         <dbl>
+##  1 birds caracara               falconiformes   falco… cara… cheriw…   241000000
+##  2 birds Montagu's harrier      falconiformes   accip… circ… pygarg…   200980000
+##  3 birds peregrine falcon       falconiformes   falco… falco peregr…   153860000
+##  4 birds booted eagle           accipitriformes accip… hier… pennat…   117300000
+##  5 birds ostrich                struthioniform… strut… stru… camelus    84300000
+##  6 birds short-toed snake eagle accipitriformes accip… circ… gallic…    78500000
+##  7 birds European turtle dove   columbiformes   colum… stre… turtur     63585000
+##  8 birds Egyptian vulture       accipitriformes accip… neop… percno…    63570000
+##  9 birds common buzzard         accipitriformes accip… buteo buteo      50240000
+## 10 birds lanner falcon          falconiformes   falco… falco biarmi…    50000000
+## # ℹ 130 more rows
+```
+The bird species with the largest homerange is caracara. The species is located along the Mexican American border. Adult caracaras have a strong bond that persists until one of the mate dies and the pair tend to maintain a large territory together. Their typical habitat consists of a dry prairie or an agricultural environment. More information can be found at this [website](https://animaldiversity.org/accounts/Caracara_cheriway/). 
 
 
 ## Push your final code to GitHub!
