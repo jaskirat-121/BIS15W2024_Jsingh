@@ -1,0 +1,265 @@
+---
+title: "Midterm 1-Note Sheet"
+author: "Jaskirat"
+date: "2024-02-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#LAB 1
+Getting working directory: 
+```{r}
+# getwd()
+```
+Making a vector of values:
+```{r}
+#x <- c(4,6,8,7,7,7,8)
+```
+Talks about R markdown
+
+#LAB 2
+Getting the sum of variables 
+```{r}
+treatment <- 36
+control <- 10
+sum <- sum(treatment, control)
+```
+Finding the class of a variable
+```{r}
+# class(variable name)
+# is.integar(variable name) ....to see if varibale name is a interger or not
+# as.integar(variable name) .... creat a varibale specified to be an integar
+
+```
+Finding NAs in a data set
+```{r}
+# is.na(variable) or can use anNA(variable)
+# use na.rm=T to removes NAs from a data set when doing arthermitic 
+```
+ Part 2: Creating a vector 
+```{r}
+day_of week <- c("Monday","Tuesday", "Wednesday")
+# my_vector_sequence <- c(1:100)  .....to generate a sequence of numbers 
+#day_of_week[2] would pull out the second value in the vector
+```
+ Creating a matrix
+```{r}
+#harry_potter_matrix <- matrix(vector name, nrow=8, byrow=T)
+#naming columns
+    #colnames(harry_potter_matrix) <- region
+    #rownames(harry_potter_matrix) <- titles
+```
+Data matrix analysis
+```{r}
+#global <- rowSums(harry_potter_matrix)
+#create a new row in the data column
+       #harry_potter_matrix <- cbind(harry_potter_matrix, global)
+#harry_potter_matrix[2,1].....get second row, first column 
+#second <- harry_potter_matrix[ ,2]......select values of the entire second row and assign to new variable
+
+#rowMeans() can be used to get the mean of rows. 
+```
+
+#LAB 3
+Making a data frame from raw data
+```{r}
+#Sex <- c("male", "female", "male")
+#Length <- c(3.2, 3.7, 3.4)
+#Weight <- c(2.9, 4.0, 3.1)
+#hbirds <- data.frame(Sex, Length, Weight)
+```
+Getting info of a data frame
+```{r}
+#names(data_frame).....gives column names
+#dim(data_frame).....gives dimensions of data frame
+#glimpse(data_frame)
+#summary(data_frame)
+#nrows(data_frame).....get number of rows 
+#ncol(data_frame).....gives number of columns
+#head(data_frame)....prints first few rows of a data frame
+#tail(data_frame)....prints last few rows of a data frame
+#table(data_frame$variable).....gives counts of the number of observations
+#str(data_frame).....gives structure of data frame
+#hbirds[ ,2]....gives info on the second column 
+#hbirds$column_name.......gets all the info from a specific column variable
+```
+Changing names of columns to lowercase
+```{r}
+#hbirds <- data.frame(sex=Sex, length=Length, weight_g=Weight)
+```
+Adding columns to a data frame
+```{r}
+#new_bird <- c("female", 3.6, 3.9)
+#hbirds<- rbind(hbirds, new_bird).....adds data to an existing column 
+
+#hbirds$neighborhood <- c("lakewood", "brentwood", "lakewood", "scenic Heights")....adds a new column 
+```
+Writing a csv file
+```{r}
+#write.csv(hbirds, "hbirds_data.csv", row.names = FALSE)
+```
+Part2: 
+importing data
+```{r}
+#variable_name <- read_csv("filename.csv")
+
+#changing variable to a factor
+#dataframe$column_name <- as.factor(dataframe$column_name)
+#levels(dataframe$column_name)
+```
+pulling out observations
+```{r}
+#filter(data_frame, length<30)
+```
+Finding sleepiest animal in a dataframe
+```{r}
+#max(sleep$sleep_total)
+#filter(sleep, sleep_total==19.9)
+```
+
+#LAB 4
+Select function
+```{r}
+#select(data_frame, "Variable1, "Variable2")....get specific columns
+#select(data_frame, variable1:variable5).....to get a range of columns
+#select(fish, -"fish_id", -"annnumber", -"length").....select everything expect these names
+#select(fish, contains("length")).....select everything with a specific word in it
+# ends_with() = Select columns that end with a character string  
+# contains() = Select columns that contain a character string  
+# matches() = Select columns that match a regular expression  
+# one_of() = Select columns names that are from a group of names 
+# starts_with()
+#select_if(fish, is.numeric).....select if a specific class of variables
+#select_if(fish, ~!is.numeric(.))....select if it is not a numeric 
+
+
+#select_all(mammals, tolower).....change column names to lowercase...use toupper for uppercase
+```
+Renaming column names 
+```{r}
+#mammals_new <- rename(mammals, genus="Genus", wean_mass="wean mass", afr="AFR", max_life="max. life", litters_size="litter size", litters_per_year="litters/year")
+```
+Janitor library
+```{r}
+#library(janitor)
+#clean_names(mammals)....to get clean names
+```
+Filter Function
+```{r}
+#filter(fish, length %in% c(167, 175)).....filter multiple values in the same variable
+#filter(fish, between(scalelength, 2.5, 2.55)).....for a range of values
+#filter(fish, near(radii_length_mm, 2, tol = 0.2))... filter if its close to a specific values
+#filter(fish, lakeid == "AL" & length > 350)....AND function
+#filter(fish, lakeid == "AL" | length > 350)....OR function
+#`filter(condition1, !condition2)` will return all rows where condition one is true but condition 2 is not.
+#`filter(xor(condition1, condition2)` will return all rows where only one of the conditions is met, and not when both conditions are met.
+
+#Example:
+#filter(fish, length > 400, (scalelength > 11 | radii_length_mm > 8))
+```
+
+#LAB 5
+Pipes
+```{r}
+#mammals %>% 
+  #select(family, genus, species, gestation) %>% 
+  #filter(gestation>=15)
+```
+Arrange command
+```{r}
+#arrange(desc(radii_length_mm))
+```
+Mutate command
+```{r}
+#fish %>% 
+  #mutate(length_mm = length*10) %>% 
+  #select(fish_id, length, length_mm)
+
+
+#change all enteries to lowercase
+#mammals %>%
+  #mutate_all(tolower)
+
+#change specific columns
+#mammals %>% 
+  #mutate(across(c("order", "family"), tolower))
+
+#replacing speicifc columns to NA values
+#mammals %>% 
+  #select(genus, species, newborn) %>%
+  #mutate(newborn_new = ifelse(newborn == -999.00, NA, newborn))%>% 
+  #arrange(newborn)
+
+
+```
+
+#LAB 6
+Getting proportions
+```{r}
+#must use janitor package first
+#tabyl(superhero_info, Alignment)
+#superhero_info %>% 
+  #tabyl(Publisher)
+```
+
+#LAB 7
+```{r}
+# library("skimr")......used to produce summaries of data
+
+```
+Making histograms of data
+```{r}
+#hist(msleep24$sleep_total_24)
+```
+Summarize function:
+```{r}
+#msleep %>% 
+  #filter(bodywt > 200) %>% 
+  #summarize(mean_sleep_large= mean(sleep_total))
+
+#msleep %>% 
+  #filter(order == "Primates") %>% 
+  #summarize(mean_primates = mean(bodywt), min_primates = min(bodywt), max_primates = max(bodywt), total=n())
+
+
+```
+n_distinct function:
+```{r}
+#msleep %>% 
+  #summarize(n_genra=n_distinct(genus)). #this is going to count the number of genera in msleep
+
+
+#data_frame %>% distinct(name)
+#unique(data_frame$name)
+```
+Finding number of NAs in each group:
+```{r}
+#penguins %>% 
+  #group_by(island) %>% 
+  #summarize(number_NAs=sum(is.na(body_mass_g)))
+
+#Removing NAs
+#penguins %>% 
+  #filter(!is.na(body_mass_g)) %>% #pulls out all the observations with a number 
+  #group_by(island) %>% 
+  #summarize(mean_body_mass=mean(body_mass_g))
+
+
+```
+count function
+```{r}
+#penguins %>% 
+  #count(island, sort = T)
+
+
+#penguins %>% 
+  #count(island, species, sort = T).....counting across multiple variables
+```
+
+
+
+
+
