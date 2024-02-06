@@ -1,0 +1,147 @@
+---
+title: "Midterm 1 W24"
+author: "Jaskirat Singh"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## Instructions
+Answer the following questions and complete the exercises in RMarkdown. Please embed all of your code and push your final work to your repository. Your code must be organized, clean, and run free from errors. Remember, you must remove the `#` for any included code chunks to run. Be sure to add your name to the author header above. 
+
+Your code must knit in order to be considered. If you are stuck and cannot answer a question, then comment out your code and knit the document. You may use your notes, labs, and homework to help you complete this exam. Do not use any other resources- including AI assistance.  
+
+Don't forget to answer any questions that are asked in the prompt!  
+
+Be sure to push your completed midterm to your repository. This exam is worth 30 points.  
+
+## Background
+In the data folder, you will find data related to a study on wolf mortality collected by the National Park Service. You should start by reading the `README_NPSwolfdata.pdf` file. This will provide an abstract of the study and an explanation of variables.  
+
+The data are from: Cassidy, Kira et al. (2022). Gray wolf packs and human-caused wolf mortality. [Dryad](https://doi.org/10.5061/dryad.mkkwh713f). 
+
+## Load the libraries
+```{r message=FALSE, warning=FALSE}
+library("tidyverse")
+library("janitor")
+```
+
+## Load the wolves data
+In these data, the authors used `NULL` to represent missing values. I am correcting this for you below and using `janitor` to clean the column names.
+```{r message=FALSE, warning=FALSE}
+wolves <- read.csv("data/NPS_wolfmortalitydata.csv", na = c("NULL")) %>% clean_names()
+```
+
+## Questions
+Problem 1. (1 point) Let's start with some data exploration. What are the variable (column) names?  
+
+```{r}
+names(wolves)
+```
+
+The wolves data has 11 varibales with the names desplayed above. 
+
+Problem 2. (1 point) Use the function of your choice to summarize the data and get an idea of its structure.  
+
+```{r}
+glimpse(wolves)
+```
+```{r}
+str(wolves)
+```
+
+
+Problem 3. (3 points) Which parks/ reserves are represented in the data? Don't just use the abstract, pull this information from the data.  
+
+```{r}
+table(wolves$park)
+```
+```{r}
+unique(wolves$park)
+```
+
+The wolves data represents 5 different parks which include DENA(Denali National Park and Preserve),GNTP(Grand Teton National Park),VNP(Voyageurs National Park) ,YNP(Yellowstone National Park ),YUCH(Yukon-Charley Rivers National Preserve).
+
+Problem 4. (4 points) Which park has the largest number of wolf packs?
+
+```{r}
+wolves %>% 
+  group_by(park) %>% 
+  summarize(packs = n_distinct(pack)) %>% 
+  arrange(desc(packs))
+```
+DENA has the largest number of wolf packs with 69 distinct packs. 
+
+Problem 5. (4 points) Which park has the highest total number of human-caused mortalities `mort_all`?
+
+```{r}
+wolves %>% 
+  group_by(park) %>% 
+  summarize(sum_mortality = sum(mort_all, na.rm=T)) %>% 
+  arrange(desc(sum_mortality))
+```
+YUCH has the highest number of human caused mortality with a value of 136. 
+
+The wolves in [Yellowstone National Park](https://www.nps.gov/yell/learn/nature/wolf-restoration.htm) are an incredible conservation success story. Let's focus our attention on this park.  
+
+Problem 6. (2 points) Create a new object "ynp" that only includes the data from Yellowstone National Park.  
+
+```{r}
+ynp <- wolves %>% 
+  filter(park == "YNP")
+  
+```
+
+
+Problem 7. (3 points) Among the Yellowstone wolf packs, the [Druid Peak Pack](https://www.pbs.org/wnet/nature/in-the-valley-of-the-wolves-the-druid-wolf-pack-story/209/) is one of most famous. What was the average pack size of this pack for the years represented in the data?
+
+```{r}
+ynp %>% 
+  filter(pack =="druid") %>% 
+  summarize(average_pack_size = mean(packsize_aug))
+```
+In the years 1996-2010 the average pack size is 13.93. 
+
+
+Problem 8. (4 points) Pack dynamics can be hard to predict- even for strong packs like the Druid Peak pack. At which year did the Druid Peak pack have the largest pack size? What do you think happened in 2010?
+
+```{r}
+ynp %>% 
+  filter(pack =="druid") %>% 
+  summarize(max_pack_size = max(packsize_aug))
+```
+```{r}
+ynp %>% 
+  filter(packsize_aug == 37)
+```
+The largest pack size is 37 and happened to be in the year 2001. In 2010 there were no more members in this specific pack and may be because they either died or they were killed by rival packs as it has happened in other years according to the links.  
+
+Problem 9. (5 points) Among the YNP wolf packs, which one has had the highest overall persistence `persisty1` for the years represented in the data? Look this pack up online and tell me what is unique about its behavior- specifically, what prey animals does this pack specialize on?  
+
+
+```{r}
+ynp %>% 
+  group_by(pack) %>% 
+  summarize(average_persistance = sum(persisty1, na.rm=T)) %>% 
+  arrange(desc(average_persistance))
+```
+
+The mollies pack had the longest persistance. They prey on elk and bison. Unique behavior including hunting bison and interactions with bears promoted studies including the Pelican Valley study where wolf,bison,bear interactions are being documents. [Link to source](https://www.yellowstonewolf.org/yellowstones_wolves.php?pack_id=6)
+
+
+
+Problem 10. (3 points) Perform one analysis or exploration of your choice on the `wolves` data. Your answer needs to include at least two lines of code and not be a summary function.  
+
+I am interested in finding which year had the most human caused mortality for alpha members across the GNTP park.  
+```{r}
+wolves %>% 
+  filter(park == "GNTP") %>% 
+  group_by(biolyr) %>% 
+  summarize(total_deaths_by_human = sum(mort_lead,na.rm=T)) %>% 
+  arrange(desc(total_deaths_by_human))
+  
+```
+
+In 2016,2017,2018 humans killed the most number of head members of a wolf pack across all packs in the GNTP park in the study combined. These 3 years each saw 2 moralities caused by the humans of head group wolves.   
+
