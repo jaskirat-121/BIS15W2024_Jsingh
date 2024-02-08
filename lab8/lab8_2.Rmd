@@ -58,7 +58,9 @@ life_history %>%
 ## Practice
 1. Can we use a single approach to deal with NA's in this data set? Given what you learned in the previous lab, how would you manage the NA values?
 ```{r}
-
+life_history <- read_csv("data/mammal_lifehistories_v3.csv", na=c("NA"," ",".","-999","not measured")) %>% clean_names()
+# need to known how the NAs are represented in the data
+#you dont want to do this by default
 ```
 
 ## `naniar`
@@ -105,7 +107,10 @@ life_history %>%
                                  gestation= -999, 
                                  mass= -999)) %>% 
 miss_var_summary()
+
+#makes making NAs very specific 
 ```
+
 
 ## Practice
 Let's practice evaluating NA's in a large data set. The data are compiled from [CITES](https://cites.org/eng). This is the international organization that tracks trade in endangered wildlife. You can find information about the data [here](https://www.kaggle.com/cites/cites-wildlife-trade-database).  
@@ -115,17 +120,22 @@ Some key information:
 
 1. Import the data and do a little exploration. Be sure to clean the names if necessary.
 ```{r}
-
+cites <- read_csv("data/cites.csv") 
+cites <- clean_names(cites)
 ```
 
 2. Use `naniar` to summarize the NA's in each variable.
 ```{r}
-
+naniar::miss_var_summary(cites)
 ```
 
 3. Try using `group_by()` with `naniar`. Look specifically at class and `exporter_reported_quantity`. For which taxonomic classes do we have a high proportion of missing export data?
 ```{r}
-
+cites %>% 
+  group_by(class) %>% 
+  select(class, exporter_reported_quantity) %>% 
+  miss_var_summary() %>% 
+  arrange(desc(pct_miss))
 ```
 
 ## Visualizing NAs
