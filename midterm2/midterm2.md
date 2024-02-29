@@ -1,7 +1,7 @@
 ---
 title: "Midterm 2 W24"
 author: "Jaskirat Singh "
-date: "2024-02-27"
+date: "2024-02-29"
 output:
   html_document: 
     keep_md: yes
