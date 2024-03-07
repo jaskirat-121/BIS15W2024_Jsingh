@@ -11,7 +11,7 @@
 
 <meta name="author" content="Please Add Your Name Here" />
 
-<meta name="date" content="2024-03-03" />
+<meta name="date" content="2024-03-06" />
 
 <title>Homework 13</title>
 
@@ -323,17 +323,23 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+content: "";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "\e258";
-font-family: 'Glyphicons Halflings';
+content: "";
 border: none;
+}
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "";
+font-family: 'Glyphicons Halflings';
+display: inline-block;
+padding: 10px;
+border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -376,7 +382,7 @@ display: none;
 
 <h1 class="title toc-ignore">Homework 13</h1>
 <h4 class="author">Please Add Your Name Here</h4>
-<h4 class="date">2024-03-03</h4>
+<h4 class="date">2024-03-06</h4>
 
 </div>
 
@@ -393,6 +399,8 @@ labeled. You are free to use any plot type that you feel best
 communicates the results of your analysis.</p>
 <p>Make sure to use the formatting conventions of RMarkdown to make your
 report neat and clean!</p>
+<pre class="r"><code>#install.packages(&quot;shinydashboard&quot;)
+#install.packages(&quot;shiny&quot;)</code></pre>
 </div>
 <div id="libraries" class="section level2">
 <h2>Libraries</h2>
@@ -420,15 +428,112 @@ individuals in each category are presented by demographic.</p>
 overall structure of the data frame, including its dimensions, column
 names, variable classes, etc. As part of this, determine if there are
 NA’s and how they are treated.</strong></p>
+<pre class="r"><code>glimpse(UC_admit)</code></pre>
+<pre><code>## Rows: 2,160
+## Columns: 6
+## $ Campus          &lt;chr&gt; &quot;Davis&quot;, &quot;Davis&quot;, &quot;Davis&quot;, &quot;Davis&quot;, &quot;Davis&quot;, &quot;Davis&quot;, …
+## $ Academic_Yr     &lt;dbl&gt; 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2018, …
+## $ Category        &lt;chr&gt; &quot;Applicants&quot;, &quot;Applicants&quot;, &quot;Applicants&quot;, &quot;Applicants&quot;…
+## $ Ethnicity       &lt;chr&gt; &quot;International&quot;, &quot;Unknown&quot;, &quot;White&quot;, &quot;Asian&quot;, &quot;Chicano…
+## $ `Perc FR`       &lt;chr&gt; &quot;21.16%&quot;, &quot;2.51%&quot;, &quot;18.39%&quot;, &quot;30.76%&quot;, &quot;22.44%&quot;, &quot;0.35…
+## $ FilteredCountFR &lt;dbl&gt; 16522, 1959, 14360, 24024, 17526, 277, 3425, 78093, 15…</code></pre>
+<pre class="r"><code>dim(UC_admit)</code></pre>
+<pre><code>## [1] 2160    6</code></pre>
+<pre class="r"><code>library(naniar)</code></pre>
+<pre><code>## Warning: package &#39;naniar&#39; was built under R version 4.2.3</code></pre>
+<pre class="r"><code>miss_var_summary(UC_admit)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   variable        n_miss pct_miss
+##   &lt;chr&gt;            &lt;int&gt;    &lt;dbl&gt;
+## 1 Perc FR              1   0.0463
+## 2 FilteredCountFR      1   0.0463
+## 3 Campus               0   0     
+## 4 Academic_Yr          0   0     
+## 5 Category             0   0     
+## 6 Ethnicity            0   0</code></pre>
 <p><strong>2. The president of UC has asked you to build a shiny app
 that shows admissions by ethnicity across all UC campuses. Your app
 should allow users to explore year, campus, and admit category as
 interactive variables. Use shiny dashboard and try to incorporate the
 aesthetics you have learned in ggplot to make the app neat and
 clean.</strong></p>
+<pre class="r"><code>ui &lt;- dashboardPage(
+  dashboardHeader(title=&quot;UC_admissions&quot;),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+    fluidRow(
+    box(
+      selectInput(&quot;x&quot;, &quot;Select Campus&quot;, choices = c(unique(UC_admit$Campus)), hr()),
+    ),
+    box(
+      selectInput(&quot;y&quot;,&quot;Select Year&quot;,choices = c(unique(UC_admit$Academic_Yr), hr()))
+    ),
+    box(
+      selectInput(&quot;z&quot;,&quot;Select Applicant&quot;,choices = c(unique(UC_admit$Category), hr()))
+    ),
+    box(
+  plotOutput(&quot;plot&quot;, width = &quot;400px&quot;, height = &quot;400px&quot;))
+    )
+    )
+  )
+ 
+   
+server &lt;- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot &lt;- renderPlot({
+    UC_admit %&gt;% 
+      filter(Campus==input$x &amp; Academic_Yr==input$y &amp; Category==input$z) %&gt;% 
+      group_by(Academic_Yr) %&gt;% 
+      ggplot(aes(x=Ethnicity, y=FilteredCountFR,fill=Ethnicity))+
+      geom_col()+
+      coord_flip()
+    })
+  
+}
+
+shinyApp(ui, server)</code></pre>
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
 <p><strong>3. Make alternate version of your app above by tracking
 enrollment at a campus over all of the represented years while allowing
 users to interact with campus, category, and ethnicity.</strong></p>
+<pre class="r"><code>ui &lt;- dashboardPage(
+  dashboardHeader(title=&quot;UC_admissions&quot;),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+    fluidRow(
+    box(
+      selectInput(&quot;x&quot;, &quot;Select Campus&quot;, choices = c(unique(UC_admit$Campus)), hr()),
+    ),
+    box(
+      selectInput(&quot;y&quot;,&quot;Select Ethnicity&quot;,choices = c(unique(UC_admit$Ethnicity), hr()))
+    ),
+    box(
+      selectInput(&quot;z&quot;,&quot;Select Applicant&quot;,choices = c(unique(UC_admit$Category), hr()))
+    ),
+    box(
+  plotOutput(&quot;plot&quot;, width = &quot;400px&quot;, height = &quot;400px&quot;))
+    )
+    )
+  )
+ 
+   
+server &lt;- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot &lt;- renderPlot({
+    UC_admit %&gt;% 
+      mutate(Academic_Yr=as.factor(Academic_Yr)) %&gt;% 
+      filter(Campus==input$x &amp; Ethnicity==input$y &amp; Category==input$z) %&gt;% 
+      group_by(Academic_Yr) %&gt;% 
+      ggplot(aes(x=Academic_Yr, y=FilteredCountFR,fill=Ethnicity))+
+      geom_col()+
+      coord_flip()
+    })
+  
+}
+
+shinyApp(ui, server)</code></pre>
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+<p>```</p>
 </div>
 <div id="push-your-final-code-to-github" class="section level2">
 <h2>Push your final code to GitHub!</h2>
