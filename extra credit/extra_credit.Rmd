@@ -1,6 +1,6 @@
 ---
 title: "Extra Credit W24"
-author: "Your Name Here"
+author: "Jaskirat Singh"
 date: "`r Sys.Date()`"
 output:
   html_document: default
@@ -36,24 +36,77 @@ global_sharks <- read_csv("data/global-shark-attack.csv") %>% clean_names()
 
 ## Questions
 1. (2 points) Start by doing some data exploration using your preferred function(s). What is the structure of the data? Where are the missing values and how are they represented?  
+```{r}
+glimpse(global_sharks)
+```
+```{r}
+miss_var_summary(global_sharks)
+```
 
 
 2. (3 points) Are there any "hotspots" for shark incidents? Make a plot that shows the total number of incidents for the top 10 countries? Which country has the highest number of incidents?
 
+```{r}
+global_sharks %>% 
+  count(country, sort = TRUE) %>% 
+  top_n(10) %>% 
+  ggplot(aes(x =country, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Top 10 Countries with the Highest Number of Shark Attacks",
+       x = "Country",
+       y = "Number of Incidents")
+```
+The USA has the highest number of incidents. 
 
 3. (3 points) Are there months of the year when incidents are more likely to occur? Make a plot that shows the total number of incidents by month. Which month has the highest number of incidents?
+
+```{r}
+global_sharks %>% 
+  separate(date, into = c("year", "month", "day"), sep = "-") %>%
+  count(month, sort = TRUE) %>% 
+  ggplot(aes(x = month, y = n)) +
+  geom_col() +
+  labs(title = "Number of Incidents by Month",
+       x = "Month",
+       y = "Number of Incidents")
+```
+January has the highest number of incidents. 
 
 
 4. (3 points) Which activity is associated with the highest number of incidents? Make a plot that compares the top 5 riskiest activities. "NA" should not be classified as an activity.
 
+```{r}
+global_sharks %>% 
+  count(activity, sort = TRUE) %>% 
+  filter(activity != 'NA') %>% 
+  top_n(5) %>% 
+  ggplot(aes(x = activity, y = n)) +
+  geom_col() +
+  labs(title = "Top 5 Riskiest Activities",
+       x = "Activity",
+       y = "Number of Incidents")
+```
+
+Surfing is the riskiest activity.
 
 5. (3 points) The data include information on who was attacked. Make a plot that shows the total number of fatalities by sex- are males or females more likely to be killed by sharks?
 
 
+
 6. (3 points) Make a plot that shows the range of age for the individuals that are attacked. Make sure to restrict sex to M or F (some of the codes used are not clear). You will also need to find a way to manage the messy age column.
+
+```{r}
+
+```
+
 
 
 7. (3 points) In the United States, what are the top 5 states where shark attacks have been recorded since 1950? Make a plot that compares the number of incidents for these 5 states.
+```{r}
+
+```
+
 
 
 8. (3 points) Make a new object that limits the data to only include attacks attributed to Great White Sharks. This is trickier than it sounds, you should end up with 494 observations. Look online and adapt code involving `str_detect`. Which country has the highest number of Great White Shark attacks?
